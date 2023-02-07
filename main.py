@@ -1,3 +1,4 @@
+import random
 from collections import Counter
 
 
@@ -18,21 +19,19 @@ def repeat_decoding(y, s):
 
 
 def binary_channel(p, y):
-    answer = ''
-    summa = 0
-    for i in y:
-        summa += p
-        if (summa-1.0<0.001):
-            answer += i
-        else:
-            summa -= 1
-            answer += str((int(i) + 1) % 2)
-    return answer
+    errors = []
+    for i in range(round(p*len(y))):
+        place = random.randint(0,len(y)-1)
+        while (place in errors):
+            place = random.randint(0, len(y) - 1)
+        errors.append(place)
+        y = y[:place] + str((int(y[place])+1)%2) + y[place+1:]
+    return y
 
 
-c = repeat_encoding('10101', 5)
+c = repeat_encoding('10110', 5)
 print(c)
-c = binary_channel(0.34, c)
+c = binary_channel(0.05, c)
 print(c)
 c = repeat_decoding(c, 5)
 print(c)
